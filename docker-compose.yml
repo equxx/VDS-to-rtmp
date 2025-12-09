@@ -1,0 +1,24 @@
+services:
+  srs:
+    image: ossrs/srs:latest
+    container_name: srs
+    volumes:
+      - ./conf:/usr/local/srs/conf:ro
+      - ./objs/nginx/html:/usr/local/srs/objs/nginx/html:rw
+    ports:
+      - "1935:1935"
+      - "1985:1985"
+      - "8080:8080"
+    restart: always
+
+  ffmpeg:
+    image: jrottenberg/ffmpeg:latest
+    container_name: ffmpeg-pusher
+    depends_on:
+      - srs
+    volumes:
+      - ./ffmpeg-wrapper.sh:/usr/local/bin/ffmpeg-wrapper.sh:ro
+      - ./stream.env:/etc/stream.env:ro
+    entrypoint: ["/bin/bash", "-c"]
+    command: "/usr/local/bin/ffmpeg-wrapper.sh"
+    restart: always
