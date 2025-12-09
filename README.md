@@ -49,13 +49,13 @@ docker compose up -d
 
 Günlükleri görmek için:
 ```bash
-docker compose logs -f
+docker-compose logs -f
 ```
 FFmpeg veya SRS özel servis günlükleri için:
 ```bash
-docker compose logs -f ffmpeg
+docker-compose logs -f ffmpeg
 # veya
-docker compose logs -f srs
+docker-compose logs -f srs
 ```
 
 ## Faydalı adresler
