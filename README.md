@@ -1,6 +1,7 @@
 # VDS-to-rtmp
 
-Docker tabanlı bu proje, bir VDS üzerinde **SRS (Simple Realtime Server)** ve **FFmpeg** kullanarak tek bir giriş akışını aynı anda birden fazla RTMP/RTMPS hedefine iletir. SRS HLS çıktısı da üretir, böylece web üzerinden izlenebilir.
+Docker tabanlı bu proje, bir VDS üzerinde **SRS (Simple Realtime Server)** ve **FFmpeg** kullanarak tek bir giriş akışını aynı anda birden fazla RTMP hedefine iletir. SRS HLS çıktısı da üretir, böylece web üzerinden izlenebilir.
+RTMPS Çıkışını denedim ama sürekli hatalarla karşılaştım, olmadı. Türkçe konu açarak bana yardımcı olabilirsiniz.
 
 ## İçindekiler
 - [Özellikler](#özellikler)
@@ -19,7 +20,7 @@ Docker tabanlı bu proje, bir VDS üzerinde **SRS (Simple Realtime Server)** ve 
 
 ## Gereksinimler
 - Docker ve Docker Compose yüklü olmalı.
-- Yayın giriş URL'lerinize ve hedef RTMP/RTMPS adreslerinize ihtiyaç var.
+- Yayın giriş URL'lerinize ve hedef RTMP adreslerinize ihtiyaç var.
 
 ## Kurulum
 1. Depoyu VDS'inize klonlayın veya dosyaları `/root/canli-yayin` dizinine yerleştirin (betikler buna göre ayarlanmıştır).
