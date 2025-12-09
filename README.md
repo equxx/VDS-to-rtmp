@@ -1,6 +1,6 @@
 # VDS-to-rtmp
 
-Docker tabanlı bu proje, bir VDS üzerinde **SRS (Simple Realtime Server)** ve **FFmpeg** kullanarak tek bir giriş akışını aynı anda birden fazla RTMP hedefine iletir. SRS HLS çıktısı da üretilir.
+Docker tabanlı bu proje, bir VDS (Virtual Dedicated Server) üzerinde **SRS (Simple Realtime Server)** ve **FFmpeg** kullanarak tek bir giriş akışını aynı anda birden fazla RTMP hedefine iletir. SRS HLS çıktısı da üretilir.
 
 ## İçindekiler
 - [Özellikler](#özellikler)
