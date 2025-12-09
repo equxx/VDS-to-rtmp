@@ -1,0 +1,6 @@
+# Generated HLS/RTMP output from SRS/FFmpeg
+objs/nginx/html/*
+!objs/nginx/html/.gitkeep
+
+# Logs
+*.log

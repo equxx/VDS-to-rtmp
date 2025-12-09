@@ -14,10 +14,21 @@ fi
 
 TRANSCODE="${TRANSCODE:-0}"
 BITRATE="${BITRATE:-2500k}"
-# run appropriate ffmpeg command
-if [ "$TRANSCODE" = "0" ] ; then
-  exec ffmpeg -re -i "$INPUT" -map 0 -c copy -f tee "$OUTPUTS"
+PRESET="${PRESET:-veryfast}"
+FPS="${FPS:-}"
+
+cmd=(ffmpeg -re -i "$INPUT" -map 0)
+
+if [ "$TRANSCODE" = "0" ]; then
+  cmd+=(-c copy)
 else
   # Örnek transcode: video x264 audio aac
-  exec ffmpeg -re -i "$INPUT" -map 0 -c:v libx264 -preset veryfast -b:v "$BITRATE" -c:a aac -b:a 128k -f tee "$OUTPUTS"
+  cmd+=(-c:v libx264 -preset "$PRESET" -b:v "$BITRATE" -c:a aac -b:a 128k)
+  if [ -n "$FPS" ]; then
+    cmd+=(-r "$FPS")
+  fi
 fi
+
+cmd+=(-f tee "$OUTPUTS")
+
+exec "${cmd[@]}"

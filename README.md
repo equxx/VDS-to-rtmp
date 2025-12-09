@@ -36,6 +36,8 @@ Docker tabanlı bu proje, bir VDS (Virtual Dedicated Server) üzerinde **SRS (Si
 - `OUTPUT_1..N`: Her biri `tee` formatıyla başlayan hedefler (ör: `[f=flv]rtmp://...`).
 - `OUTPUTS`: Tek tek `OUTPUT_*` değerlerini `|` ile birleştirir ve betik bunu kullanır.
 - `TRANSCODE`: `0` ise kopyala; `1` ise belirtilen `BITRATE` ile x264/AAC transcode yapar.
+- `PRESET`: Transcode modunda x264 hız/kalite ayarı (varsayılan `veryfast`).
+- `FPS`: Transcode modunda çıkış kare hızı (doluysa `-r` olarak uygulanır).
 
 Değişikliklerin konteyner tarafından görülebilmesi için dosya aynı dizinde kalmalıdır; Docker Compose, `/etc/stream.env` olarak bağlar.
 
