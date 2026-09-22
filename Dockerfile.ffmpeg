@@ -1,4 +1,0 @@
-FROM jrottenberg/ffmpeg:9.0-ubuntu2404
-
-USER root
-RUN mkdir -p /etc/ssl/certs
