@@ -1,68 +1,30 @@
-# VDS-to-rtmp
+# VDS to RTMP
 
-Docker tabanlı bu proje, bir VDS (Virtual Dedicated Server) üzerinde **SRS (Simple Realtime Server)** ve **FFmpeg** kullanarak tek bir giriş akışını aynı anda birden fazla RTMP hedefine iletir. SRS HLS çıktısı da üretilir.
+Version: **2.0.0**
 
-## İçindekiler
-- [Özellikler](#özellikler)
-- [Gereksinimler](#gereksinimler)
-- [Kurulum](#kurulum)
-- [Akış ayarlarını yapılandırma](#akış-ayarlarını-yapilandirma)
-- [Çalıştırma](#calistirma)
-- [Faydalı adresler](#faydali-adresler)
-- [Sorun giderme](#sorun-giderme)
+Docker Compose project that receives one input stream, forwards it to multiple RTMP destinations with FFmpeg, and serves HLS through SRS. This copy contains no live stream URLs or keys.
 
-## Özellikler
-- SRS ile 1935 (RTMP), 1985 (API) ve 8080 (HTTP/HLS) portlarını açar.
-- FFmpeg ile tek giriş akışını `tee` formatı sayesinde birden fazla RTMP hedefine çoğaltır.
-- İsteğe bağlı transcode: kopyala (varsayılan) veya x264 + AAC ile yeniden kodla.
-- Çevresel değişken dosyasıyla (shell uyumlu) kolay yapılandırma.
+## Requirements
 
-## Gereksinimler
-- Docker ve Docker Compose yüklü olmalı.
-- Yayın giriş URL'lerinize ve hedef RTMP/RTMPS adreslerinize ihtiyaç var.
+- Docker Engine and Docker Compose plugin
+- A reachable input stream URL and RTMP/RTMPS destination URLs
 
-## Kurulum
-1. Depoyu VDS'inize klonlayın veya dosyaları `/root/canli-yayin` dizinine yerleştirin (betikler buna göre ayarlanmıştır).
-2. İzinler:
-   ```bash
-   chmod +x ffmpeg-wrapper.sh
-   ```
+## Configure
 
-## Akış ayarlarını yapılandırma
-`stream.env` dosyası shell uyumlu `KEY="value"` formatındadır ve FFmpeg konteyneri tarafından yüklenir.
+1. Copy `stream.env.example` to `stream.env`.
+2. Edit `INPUT` and `OUTPUTS` with your own stream URLs and keys. `OUTPUTS` is a pipe-separated FFmpeg tee list; quote the complete value.
+3. Keep `stream.env` private. It is ignored by this package and should not be committed or shared.
 
-Örnek alanlar:
-- `INPUT`: SRS'den veya başka bir kaynaktan aldığınız giriş akışı (`rtmp://srs:1935/live/stream` gibi).
-- `OUTPUT_1..N`: Her biri `tee` formatıyla başlayan hedefler (ör: `[f=flv]rtmp://...`).
-- `OUTPUTS`: Tek tek `OUTPUT_*` değerlerini `|` ile birleştirir ve betik bunu kullanır.
-- `TRANSCODE`: `0` ise kopyala; `1` ise belirtilen `BITRATE` ile x264/AAC transcode yapar.
+`TRANSCODE=0` copies the incoming audio/video streams. Set it to `1` to encode H.264/AAC. `FPS`, `BITRATE`, and `PRESET` tune encoding.
 
-Değişikliklerin konteyner tarafından görülebilmesi için dosya aynı dizinde kalmalıdır; Docker Compose, `/etc/stream.env` olarak bağlar.
+## Start
 
-## Çalıştırma
-Projeyi başlatmak için:
-```bash
-docker compose up -d
-```
-- `srs` servisi otomatik olarak RTMP ve HLS sunar.
-- `ffmpeg` servisi `ffmpeg-wrapper.sh` giriş noktasını kullanarak akışı çoğaltır veya gerekiyorsa transcode eder.
-
-Günlükleri görmek için:
-```bash
-docker-compose logs -f
-```
-FFmpeg veya SRS özel servis günlükleri için:
-```bash
-docker-compose logs -f ffmpeg
-# veya
-docker-compose logs -f srs
+```sh
+cp stream.env.example stream.env
+# Edit stream.env with your own URLs and keys, then:
+docker compose up -d --build
 ```
 
-## Faydalı adresler
-- RTMP giriş: `rtmp://<sunucu-ip>:1935/live/<stream-key>`
-- HLS oynatma (SRS varsayılan vhost): `http://<sunucu-ip>:8080/live/<stream-key>.m3u8`
+RTMP ingest is exposed on port 1935. SRS HTTP/HLS is on port 8080; its API is bound to localhost on port 1985. Make sure your firewall only exposes the ports you intend to use.
 
-## Sorun giderme
-- **Giriş akışı gelmiyor**: `INPUT` değerinin doğru ve erişilebilir olduğundan emin olun. SRS'e push ediyorsanız port 1935 açık olmalı.
-- **Çoklu hedeflerden biri başarısız**: `OUTPUTS` içinde ilgili RTMP URL'lerini ve kimlik bilgilerini kontrol edin. Yanlış URL tüm `tee` komutunu durdurabilir.
-- **Performans sorunları**: `TRANSCODE=0` kopyalama modunu kullanın veya `BITRATE`/`PRESET` değerlerini düşürün.
+View logs with `docker compose logs -f ffmpeg` or `docker compose logs -f srs`. Stop with `docker compose down`.

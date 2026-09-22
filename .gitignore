@@ -1,0 +1,7 @@
+# Local stream credentials and source lists
+stream.env
+stream.txt
+
+# Generated HLS output
+objs/nginx/html/*
+!objs/nginx/html/.gitkeep

@@ -14,10 +14,20 @@ fi
 
 TRANSCODE="${TRANSCODE:-0}"
 BITRATE="${BITRATE:-2500k}"
-# run appropriate ffmpeg command
-if [ "$TRANSCODE" = "0" ] ; then
+# Keyframe interval is 2 seconds at the configured output FPS.
+FPS="${FPS:-60}"
+GOP=$((FPS * 2))
+PRESET="${PRESET:-veryfast}"
+
+if [ "$TRANSCODE" = "0" ]; then
   exec ffmpeg -re -i "$INPUT" -map 0 -c copy -f tee "$OUTPUTS"
 else
-  # Örnek transcode: video x264 audio aac
-  exec ffmpeg -re -i "$INPUT" -map 0 -c:v libx264 -preset veryfast -b:v "$BITRATE" -c:a aac -b:a 128k -f tee "$OUTPUTS"
+  # Software H.264 encoding for hosts without an NVIDIA GPU.
+  exec ffmpeg -re -i "$INPUT" \
+    -map 0:v:0 -map '0:a?' \
+    -c:v libx264 -preset "$PRESET" -tune zerolatency \
+    -b:v "$BITRATE" -maxrate "$BITRATE" -bufsize "$(( ${BITRATE%k} * 2 ))k" \
+    -r "$FPS" -g "$GOP" \
+    -c:a aac -b:a 128k \
+    -f tee "$OUTPUTS"
 fi

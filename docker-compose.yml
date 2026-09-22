@@ -7,18 +7,24 @@ services:
       - ./objs/nginx/html:/usr/local/srs/objs/nginx/html:rw
     ports:
       - "1935:1935"
-      - "1985:1985"
+      - "127.0.0.1:1985:1985"
       - "8080:8080"
     restart: always
 
   ffmpeg:
-    image: jrottenberg/ffmpeg:latest
+    image: vds-to-rtmp-ffmpeg:9.0-ubuntu2404-ca
+    build:
+      context: .
+      dockerfile: Dockerfile.ffmpeg
     container_name: ffmpeg-pusher
     depends_on:
       - srs
     volumes:
       - ./ffmpeg-wrapper.sh:/usr/local/bin/ffmpeg-wrapper.sh:ro
       - ./stream.env:/etc/stream.env:ro
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
+    environment:
+      SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
     entrypoint: ["/bin/bash", "-c"]
     command: "/usr/local/bin/ffmpeg-wrapper.sh"
     restart: always
