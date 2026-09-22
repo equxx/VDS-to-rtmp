@@ -1,0 +1,6 @@
+# Yerel yayın adresleri ve anahtarlar
+stream.env
+
+# Oluşturulan HLS dosyaları
+objs/nginx/html/*
+!objs/nginx/html/.gitkeep
