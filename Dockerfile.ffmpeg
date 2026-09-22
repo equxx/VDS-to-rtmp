@@ -1,4 +1,7 @@
 FROM jrottenberg/ffmpeg:9.0-ubuntu2404
 
 USER root
-RUN mkdir -p /etc/ssl/certs
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && update-ca-certificates \
+    && rm -rf /var/lib/apt/lists/*

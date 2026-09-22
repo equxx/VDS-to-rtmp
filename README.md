@@ -16,6 +16,7 @@ Docker tabanlı bu proje, bir VDS üzerinde SRS ve FFmpeg kullanarak tek bir gir
 
 - SRS, RTMP yayını ve HLS çıktısı sağlar.
 - FFmpeg, tek bir giriş yayınını `tee` biçimiyle birden fazla RTMP hedefine iletir.
+- CA sertifika paketi FFmpeg imajı oluşturulurken otomatik kurulur; RTMPS hedefleri ek host sertifika ayarı gerektirmez.
 - İsteğe bağlı yeniden kodlama, x264 ve AAC kullanır.
 - Yayın ayarları `stream.env` dosyasından yüklenir.
 
@@ -26,7 +27,11 @@ Docker tabanlı bu proje, bir VDS üzerinde SRS ve FFmpeg kullanarak tek bir gir
 
 ## Kurulum
 
-Projeyi VDS üzerine kopyalayın veya GitHub deposunu klonlayın. `stream.env.example` dosyasını `stream.env` adıyla kopyalayın ve yayın adreslerinizi bu yerel dosyaya girin. `stream.env` özel bilgi içerebilir; GitHub'a yüklemeyin veya başkalarıyla paylaşmayın.
+Sürümün `VDS-to-RTMP-v2.0.1.zip` dağıtım arşivini indirin ve açın. Arşivde düzenlemeye hazır `stream.env` dosyası bulunur; yalnızca bu dosyaya kendi giriş ve hedef yayın adreslerinizi girin. Gerçek yayın adresleri ve anahtarlar özel bilgidir; bunları paylaşmayın.
+
+Ardından `docker compose up -d --build` komutuyla başlatın. FFmpeg imajı ilk oluşturulurken CA sertifikaları otomatik kurulur ve güncellenir. Kurulum sırasında sunucunun Ubuntu paket depolarına internet erişimi olmalıdır.
+
+Kaynak depoyu doğrudan klonlarsanız `stream.env.example` dosyasını `stream.env` adıyla kopyalayın ve yalnızca bu yerel dosyayı düzenleyin.
 
 ## Yayın ayarları
 

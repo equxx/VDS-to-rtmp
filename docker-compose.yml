@@ -22,7 +22,6 @@ services:
     volumes:
       - ./ffmpeg-wrapper.sh:/usr/local/bin/ffmpeg-wrapper.sh:ro
       - ./stream.env:/etc/stream.env:ro
-      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
     environment:
       SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
     entrypoint: ["/bin/bash", "-c"]
